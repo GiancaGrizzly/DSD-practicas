@@ -1,0 +1,9 @@
+# Ignorar los archivos generados por vscode
+practica2-1/.vscode
+
+# Ignorar archivos intermedios de compilación *.o
+practica2-1/*.o
+
+# Ignorar ejecutables
+practica2-1/calculadora_client
+practica2-1/calculadora_server
