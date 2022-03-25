@@ -40,7 +40,7 @@ calculadoraprog_1(char *host, int numero_1, int numero_2, char operator)
 	else if (operator == '-') {
 		result = resta_1(numero_1, numero_2, clnt);
 	}
-	else if (operator == '*') {
+	else if (operator == 'x') {
 		result = multiplicacion_1(numero_1, numero_2, clnt);
 	}
 	else if (operator == '/') {
@@ -53,18 +53,18 @@ calculadoraprog_1(char *host, int numero_1, int numero_2, char operator)
 
 	printf("%i %c %i = %i\n", numero_1, operator, numero_2, *result);
 
-	// if (operator == '+') {
-	// 	xdr_free (xdr_suma_1_argument, result);
-	// }
-	// else if (operator == '-') {
-	// 	xdr_free (xdr_resta_1_argument, result);
-	// }
-	// else if (operator == '*') {
-	// 	xdr_free (xdr_multiplicacion_1_argument, result);
-	// }
-	// else if (operator == '/') {
-	// 	xdr_free (xdr_division_1_argument, result);
-	// }
+	if (operator == '+') {
+		xdr_free (xdr_suma_1_argument, result);
+	}
+	else if (operator == '-') {
+		xdr_free (xdr_resta_1_argument, result);
+	}
+	else if (operator == 'x') {
+		xdr_free (xdr_multiplicacion_1_argument, result);
+	}
+	else if (operator == '/') {
+		xdr_free (xdr_division_1_argument, result);
+	}
 
 
 #ifndef	DEBUG
