@@ -40,7 +40,7 @@ class Iface(object):
         """
         pass
 
-    def sumafile(self, sumandos):
+    def sumavector(self, sumandos):
         """
         Parameters:
          - sumandos
@@ -148,24 +148,24 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "logaritmo failed: unknown result")
 
-    def sumafile(self, sumandos):
+    def sumavector(self, sumandos):
         """
         Parameters:
          - sumandos
 
         """
-        self.send_sumafile(sumandos)
-        return self.recv_sumafile()
+        self.send_sumavector(sumandos)
+        return self.recv_sumavector()
 
-    def send_sumafile(self, sumandos):
-        self._oprot.writeMessageBegin('sumafile', TMessageType.CALL, self._seqid)
-        args = sumafile_args()
+    def send_sumavector(self, sumandos):
+        self._oprot.writeMessageBegin('sumavector', TMessageType.CALL, self._seqid)
+        args = sumavector_args()
         args.sumandos = sumandos
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_sumafile(self):
+    def recv_sumavector(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -173,12 +173,12 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = sumafile_result()
+        result = sumavector_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "sumafile failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "sumavector failed: unknown result")
 
 
 class Processor(Iface, TProcessor):
@@ -188,7 +188,7 @@ class Processor(Iface, TProcessor):
         self._processMap["ping"] = Processor.process_ping
         self._processMap["exp"] = Processor.process_exp
         self._processMap["logaritmo"] = Processor.process_logaritmo
-        self._processMap["sumafile"] = Processor.process_sumafile
+        self._processMap["sumavector"] = Processor.process_sumavector
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -280,13 +280,13 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_sumafile(self, seqid, iprot, oprot):
-        args = sumafile_args()
+    def process_sumavector(self, seqid, iprot, oprot):
+        args = sumavector_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = sumafile_result()
+        result = sumavector_result()
         try:
-            result.success = self._handler.sumafile(args.sumandos)
+            result.success = self._handler.sumavector(args.sumandos)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -298,7 +298,7 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("sumafile", msg_type, seqid)
+        oprot.writeMessageBegin("sumavector", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -662,7 +662,7 @@ logaritmo_result.thrift_spec = (
 )
 
 
-class sumafile_args(object):
+class sumavector_args(object):
     """
     Attributes:
      - sumandos
@@ -701,7 +701,7 @@ class sumafile_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('sumafile_args')
+        oprot.writeStructBegin('sumavector_args')
         if self.sumandos is not None:
             oprot.writeFieldBegin('sumandos', TType.LIST, 1)
             oprot.writeListBegin(TType.DOUBLE, len(self.sumandos))
@@ -725,14 +725,14 @@ class sumafile_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(sumafile_args)
-sumafile_args.thrift_spec = (
+all_structs.append(sumavector_args)
+sumavector_args.thrift_spec = (
     None,  # 0
     (1, TType.LIST, 'sumandos', (TType.DOUBLE, None, False), None, ),  # 1
 )
 
 
-class sumafile_result(object):
+class sumavector_result(object):
     """
     Attributes:
      - success
@@ -766,7 +766,7 @@ class sumafile_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('sumafile_result')
+        oprot.writeStructBegin('sumavector_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.DOUBLE, 0)
             oprot.writeDouble(self.success)
@@ -787,8 +787,8 @@ class sumafile_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(sumafile_result)
-sumafile_result.thrift_spec = (
+all_structs.append(sumavector_result)
+sumavector_result.thrift_spec = (
     (0, TType.DOUBLE, 'success', None, None, ),  # 0
 )
 fix_spec(all_structs)

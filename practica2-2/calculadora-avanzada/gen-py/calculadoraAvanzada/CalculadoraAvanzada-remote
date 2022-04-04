@@ -27,7 +27,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  void ping()')
     print('  double exp(double num1, double num2)')
     print('  double logaritmo(double num1, double num2)')
-    print('  double sumafile( sumandos)')
+    print('  double sumavector( sumandos)')
     print('')
     sys.exit(0)
 
@@ -125,11 +125,11 @@ elif cmd == 'logaritmo':
         sys.exit(1)
     pp.pprint(client.logaritmo(eval(args[0]), eval(args[1]),))
 
-elif cmd == 'sumafile':
+elif cmd == 'sumavector':
     if len(args) != 1:
-        print('sumafile requires 1 args')
+        print('sumavector requires 1 args')
         sys.exit(1)
-    pp.pprint(client.sumafile(eval(args[0]),))
+    pp.pprint(client.sumavector(eval(args[0]),))
 
 else:
     print('Unrecognized method %s' % cmd)

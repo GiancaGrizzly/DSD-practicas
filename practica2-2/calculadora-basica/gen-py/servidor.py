@@ -56,9 +56,9 @@ class CalculadoraHandler:
         print("Delegando el cálculo del logaritmo de " + str(n1) + " en base " + str(n2))
         return self.client.logaritmo(n1,n2)
 
-    def sumafile(self, sumandos):
+    def sumavector(self, sumandos):
         print("Delegando el cálculo de la suma de los números del archivo")
-        return self.client.sumafile(sumandos)
+        return self.client.sumavector(sumandos)
 
 # ----------------------------------------------------------
 

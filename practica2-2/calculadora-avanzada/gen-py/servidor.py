@@ -32,7 +32,7 @@ class CalculadoraAvanzadaHandler:
         print("Calculando el logaritmo de " + str(n1) + " en base " + str(n2))
         return math.log(n1, n2)
 
-    def sumafile(self, sumandos):
+    def sumavector(self, sumandos):
         print("Sumando los números proporcionados en el archivo")
         result = 0
         for number in sumandos:
