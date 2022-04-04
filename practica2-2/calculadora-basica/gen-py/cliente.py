@@ -25,9 +25,21 @@ client.ping()
 
 if (len(sys.argv) == 4):
 
-    numero_1 = float(sys.argv[1])
+    # Comprobación de errores en los argumentos
     operator = sys.argv[2]
-    numero_2 = float(sys.argv[3])
+
+    try:
+        numero_1 = float(sys.argv[1])
+    except ValueError:
+        print("ERROR: argumento no válido -- " + sys.argv[1])
+        exit(-1)
+
+    try:
+        numero_2 = float(sys.argv[3])
+    except ValueError:
+        print("ERROR: argumento no válido -- " + sys.argv[3])
+        exit(-1)
+        
 
     if (operator == "+"):
         resultado = client.suma(numero_1, numero_2)
@@ -55,21 +67,19 @@ else:
 
         for i in range(2, len(sys.argv)):
 
-            argumento = float(sys.argv[i])
-            
-            if isinstance(argumento, (int,float,complex)):
-                sumandos.append(argumento)
-            else:
-                print("ERROR: argumento inválido " + str(argumento))
+            try:
+                arg = float(sys.argv[i])
+            except ValueError:
+                print("ERROR: argumento no válido -- " + sys.argv[i])
+                exit(-1)
+
+            sumandos.append(arg)
         
         if (len(sumandos) > 0):
             resultado = client.sumavector(sumandos)
 
             print("Sumandos: " + str(sumandos))
             print("Resultado: " + format(resultado, '.4f'))
-
-
-        
 
 
 transport.close()
