@@ -1,7 +1,3 @@
-
-
-
-
 program CALCULADORAPROG
 {
     version CALCULADORAVER

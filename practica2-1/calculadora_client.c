@@ -12,17 +12,6 @@ calculadoraprog_1(char *host, int numero_1, int numero_2, char operator)
 {
 	CLIENT *clnt;
 	int  *result;
-	// int suma_1_arg1;
-	// int suma_1_arg2;
-	// int  *result_2;
-	// int resta_1_arg1;
-	// int resta_1_arg2;
-	// int  *result_3;
-	// int multiplicacion_1_arg1;
-	// int multiplicacion_1_arg2;
-	// int  *result_4;
-	// int division_1_arg1;
-	// int division_1_arg2;
 
 
 #ifndef	DEBUG
