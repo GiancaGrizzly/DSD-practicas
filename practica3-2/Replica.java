@@ -3,15 +3,16 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Replica extends UnicastRemoteObject implements IReplica
+public class Replica extends UnicastRemoteObject implements IReplica, IServidor
 {
     private double cantidad_donada;
-
+    private int total_suscriptores;
 
 
     public Replica() throws RemoteException
     {
         cantidad_donada = 0.0;
+        total_suscriptores = 0;
     }
 
     @Override
@@ -29,9 +30,23 @@ public class Replica extends UnicastRemoteObject implements IReplica
     }
 
     @Override
-    public void TotalDonado() throws RemoteException
+    public double TotalDonado() throws RemoteException
     {
+
         
+        return 0;
+    }
+
+    @Override
+    public int GetTotalSuscriptores() throws RemoteException
+    {
+        return total_suscriptores;
+    }
+
+    @Override
+    public double GetSubtotalDonado() throws RemoteException
+    {
+        return cantidad_donada;
     }
     
 }

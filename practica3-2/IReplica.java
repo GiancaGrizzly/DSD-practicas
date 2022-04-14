@@ -9,5 +9,5 @@ public interface IReplica extends Remote
 {
     String Registrar() throws RemoteException;
     void Donar() throws RemoteException;
-    void TotalDonado() throws RemoteException;
+    double TotalDonado() throws RemoteException;
 }
