@@ -1,7 +1,13 @@
+import java.rmi.Remote;
 
+// Define la interfaz remota
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-public interface IReplica
+public interface IReplica extends Remote
 {
-    
+    void Registrar() throws RemoteException;
+    void Donar() throws RemoteException;
+    void TotalDonado() throws RemoteException;
 }

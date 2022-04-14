@@ -1,3 +1,4 @@
+// Objeto remoto -- Implementa la interfaz remota
 
 
 

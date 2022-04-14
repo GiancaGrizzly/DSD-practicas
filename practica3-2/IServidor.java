@@ -1,3 +1,4 @@
+// Define la interfaz entre las réplicas
 
 
 
