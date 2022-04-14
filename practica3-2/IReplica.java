@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 public interface IReplica extends Remote
 {
-    void Registrar() throws RemoteException;
+    String Registrar() throws RemoteException;
     void Donar() throws RemoteException;
     void TotalDonado() throws RemoteException;
 }
