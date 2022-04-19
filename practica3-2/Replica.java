@@ -153,9 +153,9 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     public void run()
     {
         // Crea e instala el gestor de seguridad
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new SecurityManager());
-        }
+        // if (System.getSecurityManager() == null) {
+        //     System.setSecurityManager(new SecurityManager());
+        // }
 
         try {
             
