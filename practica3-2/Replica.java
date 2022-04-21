@@ -21,7 +21,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     // ---------------------------
     public Replica() throws RemoteException
     {
-        nombre = "Réplica " + _id;
+        nombre = "Réplica" + _id;
         _id++;
         cantidad_donada = 0.0;
         suscriptores = new ArrayList<String>();

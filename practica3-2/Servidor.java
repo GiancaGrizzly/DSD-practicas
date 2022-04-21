@@ -17,7 +17,7 @@ public class Servidor
 
         try {
             // No hay control de errores porque el servidor lo lanza un admin (yo)
-            int nreplicas = Integer.parseInt(args[1]);
+            int nreplicas = Integer.parseInt(args[0]);
 
             System.out.println("\nCreando réplicas y hebras ...");
 
