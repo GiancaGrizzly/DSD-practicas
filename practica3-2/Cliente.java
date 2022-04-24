@@ -57,7 +57,7 @@ public class Cliente
             }            
         }
         catch (NumberFormatException e) {
-            System.out.println("Error. Formato de la cantidad a donar: 1.0");
+            System.out.println("\n\nError. Formato de la cantidad a donar: 1.0");
         }
         catch (RemoteException e) {
             System.out.println("Exception Donar cliente: " + e.getMessage());
@@ -95,11 +95,12 @@ public class Cliente
             System.setSecurityManager(new SecurityManager());
         }
 
-        // final String menu_inicial = "Bienvenido al servicio de donaciones. Introduzca el número de la acción que desea realizar:" +
-        //                             "\n\t 1. Registrarse" +
-        //                             "\n\t 2. Donar" +
-        //                             "\n\t 3. Consultar total donado" +
-        //                             "\n\t 4. Salir";
+        final String menu_inicial = "\n\n--------------------------------------------------------------------------------------------" +
+                                    "\n\nBienvenido al servicio de donaciones. Introduzca el número de la acción que desea realizar:" +
+                                    "\n\t 1. Registrarse" +
+                                    "\n\t 2. Donar" +
+                                    "\n\t 3. Consultar total donado" +
+                                    "\n\t 4. Salir";
 
         final int NREPLICAS = Integer.parseInt(args[0]);
         String entrada, nombre_replica_conectada;
@@ -123,11 +124,7 @@ public class Cliente
 
             while (true) {
 
-                System.out.println("\n\nBienvenido al servicio de donaciones. Introduzca el número de la acción que desea realizar:" +
-                                   "\n\t 1. Registrarse" +
-                                   "\n\t 2. Donar" +
-                                   "\n\t 3. Consultar total donado" +
-                                   "\n\t 4. Salir");
+                System.out.println(menu_inicial);
                 entrada = scanner_teclado.nextLine();
                 
                 switch (entrada) {
@@ -137,7 +134,7 @@ public class Cliente
                         menu_registrar(scanner_teclado, replica_conectada);
 
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(3000);
                         } catch (InterruptedException e) {
                             System.out.println("Exception sleep Registrar cliente: " + e.getMessage());
                         }
@@ -149,7 +146,7 @@ public class Cliente
                         menu_donar(scanner_teclado, replica_conectada);
 
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(3000);
                         } catch (InterruptedException e) {
                             System.out.println("Exception sleep Donar cliente: " + e.getMessage());
                         }
@@ -161,7 +158,7 @@ public class Cliente
                         menu_total_donado(scanner_teclado, replica_conectada);
 
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(3000);
                         } catch (InterruptedException e) {
                             System.out.println("Exception sleep TotalDonado cliente: " + e.getMessage());
                         }
