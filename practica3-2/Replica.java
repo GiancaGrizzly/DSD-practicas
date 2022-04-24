@@ -14,7 +14,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     private String nombre;
     private double cantidad_donada;
     private ArrayList<Suscriptor> suscriptores;
-    private ArrayList<Replica> replicas;
+    private ArrayList<IServidor> replicas;
 
 
     // Métodos públicos de la clase Replica
@@ -25,7 +25,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
         _id++;
         cantidad_donada = 0.0;
         suscriptores = new ArrayList<Suscriptor>();
-        replicas = new ArrayList<Replica>();
+        replicas = new ArrayList<IServidor>();
     }
 
     public void SetReplicas(ArrayList<Replica> replicas) throws RemoteException
@@ -54,7 +54,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
         }
         else {
             
-            Iterator<Replica> it = replicas.iterator();
+            Iterator<IServidor> it = replicas.iterator();
             while (it.hasNext() && !existe) {
 
                 if (it.next().ExisteSuscriptor(suscriptor)) {
@@ -91,7 +91,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     {
         double total = cantidad_donada;
 
-        for (Replica r : replicas) {
+        for (IServidor r : replicas) {
             
             total += r.GetSubtotalDonado();
         }
@@ -109,7 +109,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
 
         if (!existe_suscriptor(identificador_suscriptor)) {
 
-            Replica min_replica = this;
+            IServidor min_replica = this;
 
             for (int i=0; i<replicas.size(); i++) {
 
@@ -145,7 +145,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
         }
         else {
 
-            for (Replica r : replicas) {
+            for (IServidor r : replicas) {
                 
                 indice = r.GetSuscriptor(identificador_suscriptor);
                 if (indice != r.GetTotalSuscriptores()) {
@@ -177,7 +177,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
         }
         else {
 
-            for (Replica r : replicas) {
+            for (IServidor r : replicas) {
 
                 indice = r.GetSuscriptor(identificador_suscriptor);
                 if (indice != r.GetTotalSuscriptores()) {
