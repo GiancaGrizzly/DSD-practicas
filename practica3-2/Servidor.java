@@ -61,7 +61,7 @@ public class Servidor
             System.out.println("\nRéplicas lanzadas con éxito.");
         }
         catch (RemoteException e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception Servidor: " + e.getMessage());
         }
     }
 }

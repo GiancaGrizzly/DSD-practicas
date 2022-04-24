@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 
 public interface IReplica extends Remote
 {
-    int Registrar(String identificador) throws RemoteException;
-    void Donar(double donacion) throws RemoteException;
-    double TotalDonado() throws RemoteException;
+    int Registrar(String identificador_suscriptor) throws RemoteException;
+    int Donar(String identificador_suscriptor, double donacion) throws RemoteException;
+    double TotalDonado(String identificador_suscriptor) throws RemoteException;
 }

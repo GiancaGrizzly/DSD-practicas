@@ -13,7 +13,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
 
     private String nombre;
     private double cantidad_donada;
-    private ArrayList<String> suscriptores;
+    private ArrayList<Suscriptor> suscriptores;
     private ArrayList<Replica> replicas;
 
 
@@ -21,10 +21,10 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     // ---------------------------
     public Replica() throws RemoteException
     {
-        nombre = "Réplica" + _id;
+        nombre = "Replica" + _id;
         _id++;
         cantidad_donada = 0.0;
-        suscriptores = new ArrayList<String>();
+        suscriptores = new ArrayList<Suscriptor>();
         replicas = new ArrayList<Replica>();
     }
 
@@ -42,11 +42,13 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
 
     // Métodos privados de clase
     // ---------------------------
-    private boolean existe_suscriptor(String identificador) throws RemoteException
+    private boolean existe_suscriptor(String identificador_suscriptor) throws RemoteException
     {
         boolean existe = false;
 
-        if (suscriptores.contains(identificador)) {
+        Suscriptor suscriptor = new Suscriptor(identificador_suscriptor);
+
+        if (suscriptores.contains(suscriptor)) {
 
             existe = true;
         }
@@ -55,7 +57,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
             Iterator<Replica> it = replicas.iterator();
             while (it.hasNext() && !existe) {
 
-                if (it.next().ExisteSuscriptor(identificador)) {
+                if (it.next().ExisteSuscriptor(suscriptor)) {
 
                     existe = true;
                 }
@@ -65,20 +67,47 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
         return existe;
     }
 
+    private int get_suscriptor (String identificador_suscriptor)
+    {
+        int indice = 0;
+        boolean encontrado = false;
+
+        while ( (indice < suscriptores.size()) && !encontrado ) {
+
+            if (identificador_suscriptor.equals(suscriptores.get(indice).GetId())) {
+
+                encontrado = true;
+            }
+            else {
+
+                indice++;
+            }
+        }
+
+        return indice;
+    }
+
+    private double get_total_donado () throws RemoteException
+    {
+        double total = cantidad_donada;
+
+        for (Replica r : replicas) {
+            
+            total += r.GetSubtotalDonado();
+        }
+
+        return total;
+    }
+
 
     // Métodos de la interfaz remota IReplica
     // ---------------------------
     @Override
-    public int Registrar(String identificador) throws RemoteException
+    public int Registrar(String identificador_suscriptor) throws RemoteException
     {
-        int ok = 0;
+        int ok = -1;
 
-        if (existe_suscriptor(identificador)) {
-
-            // "No ha sido posible registrarse: ya existe un usuario con ese identificador."
-            ok = -1;
-        }
-        else {
+        if (!existe_suscriptor(identificador_suscriptor)) {
 
             Replica min_replica = this;
 
@@ -91,29 +120,77 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
                 }
             }
 
-            min_replica.AddSuscriptor(identificador);
+            min_replica.AddSuscriptor(identificador_suscriptor);
 
-            // "Registro realizado con éxito."
-
+            ok = 0;
         }
 
         return ok;
     }
 
     @Override
-    public void Donar(double donacion) throws RemoteException
+    public int Donar(String identificador_suscriptor, double donacion) throws RemoteException
     {
-        cantidad_donada += donacion;
+        int ok = -1;
+
+        int indice = get_suscriptor(identificador_suscriptor);
+
+        if (indice != suscriptores.size()) {
+
+            cantidad_donada += donacion;
+
+            suscriptores.get(indice).Set_donado();
+
+            ok = 0;
+        }
+        else {
+
+            for (Replica r : replicas) {
+                
+                indice = r.GetSuscriptor(identificador_suscriptor);
+                if (indice != r.GetTotalSuscriptores()) {
+
+                    r.DonarReplica(indice, donacion);
+
+                    // Se sale del bucle, ya que hemos encontrado el suscriptor
+                    ok = 0;
+                    break;
+                }
+            }
+        }
+
+        return ok;
     }
 
     @Override
-    public double TotalDonado() throws RemoteException
+    public double TotalDonado(String identificador_suscriptor) throws RemoteException
     {
-        double total = cantidad_donada;
+        double total = -1;
+        int indice = get_suscriptor(identificador_suscriptor);
 
-        for (Replica r : replicas) {
-            
-            total += r.GetSubtotalDonado();
+        if (indice != suscriptores.size()) {
+
+            if (suscriptores.get(indice).Ha_donado()) {
+
+                total = get_total_donado();
+            }
+        }
+        else {
+
+            for (Replica r : replicas) {
+
+                indice = r.GetSuscriptor(identificador_suscriptor);
+                if (indice != r.GetTotalSuscriptores()) {
+
+                    if (r.GetSuscriptor(indice).Ha_donado()) {
+
+                        total = get_total_donado();
+                    }
+                    // Se sale del bucle, ya que hemos encontrado el suscriptor
+                    // (se sale sin importar si ha donado o no)
+                    break;
+                }
+            }
         }
 
         return total;
@@ -135,15 +212,35 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     }
 
     @Override
-    public boolean ExisteSuscriptor(String identificador) throws RemoteException
+    public void DonarReplica(int indice, double donacion) throws RemoteException
     {
-        return suscriptores.contains(identificador);
+        cantidad_donada += donacion;
+
+        suscriptores.get(indice).Set_donado();       
     }
 
     @Override
-    public void AddSuscriptor(String identificador) throws RemoteException
+    public boolean ExisteSuscriptor(Suscriptor suscriptor) throws RemoteException
     {
-        suscriptores.add(identificador);
+        return suscriptores.contains(suscriptor);
+    }
+
+    @Override
+    public int GetSuscriptor (String identificador_suscriptor) throws RemoteException
+    {
+        return get_suscriptor(identificador_suscriptor);
+    }
+
+    @Override
+    public Suscriptor GetSuscriptor (int indice) throws RemoteException
+    {
+        return suscriptores.get(indice);
+    }
+
+    @Override
+    public void AddSuscriptor(String identificador_suscriptor) throws RemoteException
+    {
+        suscriptores.add(new Suscriptor(identificador_suscriptor));
     }
     
 
@@ -165,7 +262,7 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
         }
         catch (RemoteException | MalformedURLException e) {
             
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception Replica: " + e.getMessage());
         }
     }
     
