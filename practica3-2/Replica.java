@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Replica extends UnicastRemoteObject implements IReplica, IServidor, Runnable
 {
@@ -15,6 +16,8 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     private double cantidad_donada;
     private ArrayList<Suscriptor> suscriptores;
     private ArrayList<IServidor> replicas;
+
+    private ReentrantLock lock;
 
 
     // Métodos públicos de la clase Replica
@@ -26,6 +29,8 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
         cantidad_donada = 0.0;
         suscriptores = new ArrayList<Suscriptor>();
         replicas = new ArrayList<IServidor>();
+
+        lock = new ReentrantLock();
     }
 
     public void SetReplicas(ArrayList<Replica> replicas) throws RemoteException
@@ -89,7 +94,15 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
 
     private double get_total_donado () throws RemoteException
     {
-        double total = cantidad_donada;
+        double total;
+
+        lock.lock();
+        try {
+            total = cantidad_donada;
+        }
+        finally {
+            lock.unlock();
+        }
 
         for (IServidor r : replicas) {
             
@@ -137,7 +150,13 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
 
         if (indice != suscriptores.size()) {
 
-            cantidad_donada += donacion;
+            lock.lock();
+            try{
+                cantidad_donada += donacion;
+            }
+            finally {
+                lock.unlock();
+            }
 
             suscriptores.get(indice).Set_donado();
 
@@ -208,13 +227,29 @@ public class Replica extends UnicastRemoteObject implements IReplica, IServidor,
     @Override
     public double GetSubtotalDonado() throws RemoteException
     {
-        return cantidad_donada;
+        double total;
+
+        lock.lock();
+        try {
+            total = cantidad_donada;
+        }
+        finally {
+            lock.unlock();
+        }
+
+        return total;
     }
 
     @Override
     public void DonarReplica(int indice, double donacion) throws RemoteException
     {
-        cantidad_donada += donacion;
+        lock.lock();
+        try {
+            cantidad_donada += donacion;
+        }
+        finally {
+            lock.unlock();
+        }
 
         suscriptores.get(indice).Set_donado();       
     }
