@@ -107,9 +107,6 @@ public class Cliente
         Random random = new Random();
         Scanner scanner_teclado = new Scanner(System.in);
 
-        // Simulo que el usuario se conecta cada vez desde un "cajero" distinto
-        // independientemente de la replica en la que esté registrado y donde se
-        // efectúen sus donaciones
         nombre_replica_conectada = "Replica" + (random.nextInt(NREPLICAS)+1);
         System.out.println("Usuario conectandose a " + nombre_replica_conectada + " ...");
 
