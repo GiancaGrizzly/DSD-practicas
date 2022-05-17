@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="index.css">
+    
+    <title>Home Domótica</title>
+    
+
+</head>
+
+<body>
+
+    <main>
+    
+        <div class="sensores-actuadores" id="sensores">
+
+            <h1>Estado</h1>
+
+            <div><b>Temperatura : </b> <span id="estado-temperatura">cualquier temperatura ºC</span></div>
+            <div><b>Luminosidad : </b> <span id="estado-luminosidad">alguna luminosidad lúmenes</span></div>
+            <div><b>A/C : </b> <span id="estado-aire">on/off</span></div>
+            <div><b>Persiana : </b> <span id="estado-persiana">on/off</span></div>
+
+        </div>
+
+        <div class="sensores-actuadores" id="actuadores">
+
+            <h1>Modificar estado</h1>
+
+            <form>
+
+                <div><b>Temperatura  </b> 0 <input id="input-temperatura" type="range" min="0" max="35"> 35</div>
+                <button id="boton-temperatura">Actualizar</button> <br><br>
+
+                <div><b>Luminosidad  </b> 0 <input id="input-luminosidad" type="range" min="0" max="100"> 100</div>
+                <button id="boton-luminosidad">Actualizar</button> <br><br>
+
+                <div><b>A/C  </b> <input id="input-aire" type="checkbox"></div>
+                <button id="boton-aire">Actualizar</button> <br><br>
+
+                <div><b>Persiana  </b> <input id="input-persiana" type="checkbox"></div>
+                <button id="boton-persiana">Actualizar</button>
+
+            </form>
+
+        </div>
+
+    </main>
+    
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        
+        var serviceURL = document.URL;
+        var socket = io.connect(serviceURL);
+
+        var temperatura = document.getElementById('temperatura');
+        var luminosidad = document.getElementById('luminosidad');
+        var aire = document.getElementById('aire-acondicionado');
+        var persiana = document.getElementById('persiana');
+
+    </script>
+
+</body>
+
+</html>
