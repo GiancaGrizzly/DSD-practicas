@@ -23,7 +23,7 @@ app.get('/', (request, response) => {
 // Se habilita el uso de los archivos en /static
 // Me daba error -≥ No se puede cargar la hoja de estilos index.css porque su tipo
 // MIME, text/plain, no es text/css
-app.use(express.static(__dirname + '/static'));
+app.use(express.static(__dirname));
 
 /* ------------------------------------------------------------------------------
  * Configuración del cliente para mongodb
