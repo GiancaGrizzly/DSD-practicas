@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="cliente.css">
+    
+    <title>Home Domótica</title>
+    
+
+</head>
+
+<body>
+
+    <main>
+    
+        <div class="sensores-actuadores" id="sensores">
+
+            <h1>Panel de estado</h1>
+
+            <div><b>Temperatura : </b> <span id="Temperatura">...</span></div>
+            <div><b>Luminosidad : </b> <span id="Luminosidad">...</span></div>
+            <div><b>A/C : </b> <span id="Aire">...</span></div>
+            <div><b>Persiana : </b> <span id="Persiana">...</span></div>
+
+        </div>
+
+        <div class="sensores-actuadores" id="actuadores">
+
+            <h1>Panel para modificar estado</h1>
+
+            <form>
+
+                <div><b>Temperatura  </b> 0 <input name="nuevaTemperatura" type="range" min="0" max="35"> 35</div>
+                <button type="button" onclick="update('Temperatura', nuevaTemperatura.value)">Actualizar</button> <br><br>
+
+                <div><b>Luminosidad  </b> 0 <input name="nuevaLuminosidad" type="range" min="0" max="100"> 100</div>
+                <button type="button" onclick="update('Luminosidad', nuevaLuminosidad.value)">Actualizar</button> <br><br>
+
+                <div><b>A/C  </b> <input name="nuevoAire" type="checkbox"></div>
+                <button type="button" onclick="update('Aire', nuevoAire.checked)">Actualizar</button> <br><br>
+
+                <div><b>Persiana  </b> <input name="nuevaPersiana" type="checkbox"></div>
+                <button type="button" onclick="update('Persiana', nuevaPersiana.checked)">Actualizar</button>
+
+            </form>
+
+        </div>
+
+    </main>
+    
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="cliente.js"></script>
+    <script>
+        
+        var serviceURL = document.URL;
+        var socket = io.connect(serviceURL);
+
+        socket.on('load-estado', function (sensores) {
+
+            loadEstado(sensores);
+        });
+
+        socket.on('update-estado', function (event) {
+
+            updateEstado(event);
+        });
+
+    </script>
+
+</body>
+
+</html>
