@@ -17,27 +17,7 @@ function update(param, valor) {
     var serviceURL = document.URL;
     var socket = io.connect(serviceURL);
 
-    // Para introducir On/Off en lugar de true/false
-    switch (param) {
-
-        case "Aire":
-        case "Persiana":
-
-            if (valor == true) {
-
-                valor = "On";
-            }
-            else{
-
-                valor = "Off";
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    socket.emit('logEvent', {parametro:param, valorNuevo:valor, fecha:new Date()});
+    socket.emit('logEvent', {parametro:param, valorNuevo:valor, fecha:new Date(), trigger:"Usuario"});
 }
 /* ------------------------------------------------------------------------------
  * Se actualiza el valor mostrado en <span></span> correspondiente al evento <event>

@@ -22,7 +22,7 @@ app.get('/', (request, response) => {
     response.sendFile(__dirname + '/cliente.html');
 });
 
-// Se habilita el uso de los archivos en /static
+// Necesario para incluir la hoja de estilos cliente.css
 // Me daba error -≥ No se puede cargar la hoja de estilos cliente.css porque su tipo
 // MIME, text/plain, no es text/css
 app.use(express.static(__dirname));
@@ -33,8 +33,7 @@ app.use(express.static(__dirname));
  * Configuración socket.io
 **/
 
-var sensores = {Temperatura:"20", Luminosidad:"45", Aire:"Off", Persiana:"Off"};
-
+var sensores = {Temperatura:"25", Luminosidad:"30", Aire:"Apagado", Persiana:"Cerrada", Ventana:"Cerrada"};
 var urlMongo = "mongodb://localhost:27017/";
 
 MongoClient.connect(urlMongo, {useUnifiedTopology: true}, function(err_connect, db) {
@@ -58,35 +57,24 @@ MongoClient.connect(urlMongo, {useUnifiedTopology: true}, function(err_connect, 
 
         socket.on('logEvent', function (event) {
 
+            io.emit('comprobar', {event, sensores});
+
             lib.logEvent(eventsLogCollection, event);
 
-            switch (event.parametro) {
-
-                case "Temperatura":
-
-                    sensores.Temperatura = event.valorNuevo;
-                    break;
-
-                case "Luminosidad":
-
-                    sensores.Luminosidad = event.valorNuevo;
-                    break;
-
-                case "Aire":
-
-                    sensores.Aire = event.valorNuevo;
-                    break;
-
-                case "Persiana":
-
-                    sensores.Persiana = event.valorNuevo;
-                    break;
-
-                default:
-                    break;
-            }
+            lib.updateSensores(sensores, event);
 
             io.emit('update-estado', event);
+        });
+
+        socket.on('cerrar-persiana', function () {
+
+            sensores.Persiana = "Cerrada";
+
+            var event = {parametro: "Persiana", valorNuevo: "Cerrada", fecha: new Date(), trigger: "Agente"};
+
+            lib.logEvent(eventsLogCollection, event);
+
+            io.emit('update-estado', {parametro:"Persiana", valorNuevo:"Cerrada"});
         });
     });
 

@@ -25,6 +25,10 @@
             <div><b>Luminosidad : </b> <span id="Luminosidad">...</span></div>
             <div><b>A/C : </b> <span id="Aire">...</span></div>
             <div><b>Persiana : </b> <span id="Persiana">...</span></div>
+            <div><b>Ventana : </b> <span id="Ventana">...</span></div>
+
+            <br><br>
+            <ul id="alarmas"></ul>
 
         </div>
 
@@ -34,17 +38,34 @@
 
             <form>
 
-                <div><b>Temperatura  </b> 0 <input name="nuevaTemperatura" type="range" min="0" max="35"> 35</div>
+                <label for="nuevaTemperatura"><b>Temperatura</b></label>
+                -- 15 <input name="nuevaTemperatura" id="nuevaTemperatura" type="range" min="15" max="40"> 40
                 <button type="button" onclick="update('Temperatura', nuevaTemperatura.value)">Actualizar</button> <br><br>
 
-                <div><b>Luminosidad  </b> 0 <input name="nuevaLuminosidad" type="range" min="0" max="100"> 100</div>
+                <label for="nuevaLuminosidad"><b>Luminosidad</b></label>
+                -- 10 <input name="nuevaLuminosidad" id="nuevaLuminosidad" type="range" min="0" max="50"> 50
                 <button type="button" onclick="update('Luminosidad', nuevaLuminosidad.value)">Actualizar</button> <br><br>
 
-                <div><b>A/C  </b> <input name="nuevoAire" type="checkbox"></div>
-                <button type="button" onclick="update('Aire', nuevoAire.checked)">Actualizar</button> <br><br>
+                <label for="nuevoAire"><b>A/C</b></label>
+                <select name="nuevoAire" id="nuevoAire">
+                    <option value="Encendido">Encendido</option>
+                    <option value="Apagado">Apagado</option>
+                </select>
+                <button type="button" onclick="update('Aire', nuevoAire.value)">Actualizar</button> <br><br>
 
-                <div><b>Persiana  </b> <input name="nuevaPersiana" type="checkbox"></div>
-                <button type="button" onclick="update('Persiana', nuevaPersiana.checked)">Actualizar</button>
+                <label for="nuevaPersiana"><b>Persina</b></label>
+                <select name="nuevaPersiana" id="nuevaPersiana">
+                    <option value="Encendido">Abierta</option>
+                    <option value="Apagado">Cerradda</option>
+                </select>
+                <button type="button" onclick="update('Persiana', nuevaPersiana.value)">Actualizar</button> <br><br>
+
+                <label for="nuevaVentana"><b>Ventana</b></label>
+                <select name="nuevaVentana" id="nuevaVentana">
+                    <option value="Encendido">Abierta</option>
+                    <option value="Apagado">Cerrada</option>
+                </select>
+                <button type="button" onclick="update('Ventana', nuevaVentana.value)">Actualizar</button> <br><br>
 
             </form>
 
@@ -68,6 +89,13 @@
         socket.on('update-estado', function (event) {
 
             updateEstado(event);
+        });
+
+        socket.on('alarma', function (msg) {
+
+            var ul_item = document.createElement('li');
+            ul_item.innerHTML = msg;
+            document.getElementById("alarmas").appendChild(ul_item);
         });
 
     </script>

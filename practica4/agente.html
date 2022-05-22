@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Agente</title>
+</head>
+<body>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="agente.js"></script>
+    <script>
+
+        var serviceURL = "http://localhost:8080/";
+        var socket = io.connect(serviceURL);
+
+        socket.on('comprobar', function (data) {
+
+            switch (data.event.parametro) {
+
+                case "Temperatura":
+
+                    data.sensores.Temperatura = data.event.valorNuevo;
+
+                    comprobar_umbrales("Temperatura", data.sensores);
+                    break;
+
+                case "Luminosidad":
+
+                    data.sensores.Luminosidad = data.event.valorNuevo;
+
+                    comprobar_umbrales("Luminosidad", data.sensores);
+                    break;
+
+                case "Aire":
+
+                    data.sensores.Aire = data.event.valorNuevo;
+
+                    comprobar_eventos_complejos(data.sensores);
+                    break;
+
+                case "Ventana":
+
+                    data.sensores.Ventana = data.event.valorNuevo;
+
+                    comprobar_eventos_complejos(data.sensores);
+                    break;
+
+                default:
+                    break;
+            }
+        });
+
+    </script>
+
+</body>
+</html>
