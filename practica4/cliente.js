@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------------
- * Se registra el evento <event> en la colección <collection>
+ * Carga el estado de los sensores
 **/
 function loadEstado(sensores) {
 
@@ -9,15 +9,15 @@ function loadEstado(sensores) {
     }
 }
 /* ------------------------------------------------------------------------------
- * Se preparan los campos del evento para insertarlo en la base de datos y se
- * emite el evento para que el servidor proceda
+ * Prepara los campos del evento para insertarlo en la base de datos y emite el
+ * evento para que el servidor proceda con el registro
 **/
 function update(param, valor) {
 
     socket.emit('logEvent', {parametro:param, valorNuevo:valor, fecha:new Date(), trigger:"Usuario"});
 }
 /* ------------------------------------------------------------------------------
- * Se actualiza el valor mostrado en <span></span> correspondiente al evento <event>
+ * Actualiza el valor mostrado en <span></span> correspondiente al evento <event>
 **/
 function updateEstado(event) {
 
@@ -25,7 +25,7 @@ function updateEstado(event) {
     span.innerHTML = event.valorNuevo;
 }
 /* ------------------------------------------------------------------------------
- * Se crea un nuevo item para listar en el post de alarmas
+ * Crea un nuevo item para listar en el post de alarmas
 **/
 function createAlarmMessage(msg) {
 

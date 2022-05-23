@@ -1,9 +1,14 @@
 /* ------------------------------------------------------------------------------
+ * Umbrales
+**/
+const temperatura_MIN = 20;
+const temperatura_MAX = 35;
+const luminosidad_MIN = 15;
+const luminosidad_MAX = 45;
+/* ------------------------------------------------------------------------------
  * Funciones del agente para las comprobaciones
 **/
 function comprobar_umbrales(variable, sensores) {
-
-    console.log("Agente comprobando ...");
 
     switch (variable) {
 
@@ -34,22 +39,18 @@ function comprobar_umbrales(variable, sensores) {
 
     if (Number(sensores.Temperatura) > temperatura_MAX && Number(sensores.Luminosidad) > luminosidad_MAX) {
 
-        socket.emit('alarma', "Temperatura y luminosidad por encima de sus umbrales -> Cerrando persiana ...")
+        socket.emit('alarma', "Temperatura y luminosidad por encima del umbral -> Cerrando persiana.")
         socket.emit('cerrar-persiana');
     }
 }
 
 function comprobar_eventos_complejos(sensores) {
 
+    if (sensores.Aire == "Encendido" && sensores.Ventana == "Abierta") {
 
+        socket.emit('alarma', "Cuidado! Aire acondicionado encendido y ventana abierta.");
+    }
 }
-/* ------------------------------------------------------------------------------
- * Umbrales
-**/
-const temperatura_MIN = 20;
-const temperatura_MAX = 35;
-const luminosidad_MIN = 15;
-const luminosidad_MAX = 45;
 /* ------------------------------------------------------------------------------
  * El agente se conecta al servidor
 **/
@@ -64,28 +65,20 @@ socket.on('comprobar', function (data) {
 
         case "Temperatura":
 
-            data.sensores.Temperatura = data.event.valorNuevo;
-
             comprobar_umbrales("Temperatura", data.sensores);
             break;
 
         case "Luminosidad":
-
-            data.sensores.Luminosidad = data.event.valorNuevo;
 
             comprobar_umbrales("Luminosidad", data.sensores);
             break;
 
         case "Aire":
 
-            data.sensores.Aire = data.event.valorNuevo;
-
             comprobar_eventos_complejos(data.sensores);
             break;
 
         case "Ventana":
-
-            data.sensores.Ventana = data.event.valorNuevo;
 
             comprobar_eventos_complejos(data.sensores);
             break;

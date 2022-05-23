@@ -1,18 +1,37 @@
 /* ------------------------------------------------------------------------------
- * includes
+ * includes y variables
 **/
-
 var http = require("http");
 var express = require("express");
 var socketio = require("socket.io");
 var MongoClient = require('mongodb').MongoClient;
+var nodemailer = require("nodemailer");
 
 var lib = require("./lib_servidor");
 
+var urlMongo = "mongodb://localhost:27017/";
+var db_name = "domotica";
+var collection_name = "eventsLog";
+
+var sensores = {Temperatura:"25", Luminosidad:"30", Aire:"Apagado", Persiana:"Cerrada", Ventana:"Cerrada"};
+
+var transporter = nodemailer.createTransport({
+
+    service: 'gmail',
+    auth: {
+        user: 'practicaDomoticaDSD@gmail.com',
+        pass: 'carloscorts'
+    }
+});
+var mail_options = {
+    from: 'practicaDomoticaDSD@gmail.com',
+    to: 'carloscorts@correo.ugr.es',
+    subject: 'Alarmas Domotica',
+    text: ''
+};
 /* ------------------------------------------------------------------------------
  * Configuración del servidor
 **/
-
 var app = express();
 var httpServer = http.createServer(app);
 
@@ -26,16 +45,11 @@ app.get('/', (request, response) => {
 // Me daba error -≥ No se puede cargar la hoja de estilos cliente.css porque su tipo
 // MIME, text/plain, no es text/css
 app.use(express.static(__dirname));
-
 /* ------------------------------------------------------------------------------
  * Configuración del cliente para mongodb
  * Inicialización del servidor
  * Configuración socket.io
 **/
-
-var sensores = {Temperatura:"25", Luminosidad:"30", Aire:"Apagado", Persiana:"Cerrada", Ventana:"Cerrada"};
-var urlMongo = "mongodb://localhost:27017/";
-
 MongoClient.connect(urlMongo, {useUnifiedTopology: true}, function(err_connect, db) {
 
     if (err_connect) throw err_connect;
@@ -48,8 +62,8 @@ MongoClient.connect(urlMongo, {useUnifiedTopology: true}, function(err_connect, 
 
     var io = socketio(httpServer);
 
-    var db_domotica = db.db("domotica");
-    var eventsLogCollection = db_domotica.collection("eventsLog");
+    var db_domotica = db.db(db_name);
+    var eventsLogCollection = db_domotica.collection(collection_name);
 
     io.on('connection', function (socket) {
 
@@ -57,13 +71,24 @@ MongoClient.connect(urlMongo, {useUnifiedTopology: true}, function(err_connect, 
 
         socket.on('logEvent', function (event) {
 
-            io.emit('comprobar', {event, sensores});
+            lib.updateSensores(sensores, event);
 
             lib.logEvent(eventsLogCollection, event);
 
-            lib.updateSensores(sensores, event);
-
             io.emit('update-estado', event);
+            io.emit('comprobar', {event, sensores});
+        });
+
+        socket.on('alarma', function (msg) {
+
+            socket.broadcast.emit('alarma', msg);
+
+            mail_options.text = msg;
+            transporter.sendMail(mail_options, function (error_send, info) {
+
+                if (error_send) console.log(error_send);
+                else console.log("Email enviado. " + info.response);
+            });
         });
 
         socket.on('cerrar-persiana', function () {
@@ -76,12 +101,5 @@ MongoClient.connect(urlMongo, {useUnifiedTopology: true}, function(err_connect, 
 
             io.emit('update-estado', {parametro:"Persiana", valorNuevo:"Cerrada"});
         });
-
-        socket.on('alarma', function (msg) {
-
-            socket.broadcast.emit('alarma', msg);
-        });
     });
-
-    
 });
