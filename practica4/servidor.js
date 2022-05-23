@@ -48,8 +48,6 @@ app.get('/', (request, response) => {
 });
 
 // Necesario para incluir la hoja de estilos cliente.css
-// Me daba error -≥ No se puede cargar la hoja de estilos cliente.css porque su tipo
-// MIME, text/plain, no es text/css
 app.use(express.static(__dirname));
 /* ------------------------------------------------------------------------------
  * Configuración del cliente para mongodb
