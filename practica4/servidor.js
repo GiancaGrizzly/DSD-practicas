@@ -76,6 +76,11 @@ MongoClient.connect(urlMongo, {useUnifiedTopology: true}, function(err_connect, 
 
             io.emit('update-estado', {parametro:"Persiana", valorNuevo:"Cerrada"});
         });
+
+        socket.on('alarma', function (msg) {
+
+            socket.broadcast.emit('alarma', msg);
+        });
     });
 
     

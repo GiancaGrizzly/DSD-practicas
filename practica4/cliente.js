@@ -14,9 +14,6 @@ function loadEstado(sensores) {
 **/
 function update(param, valor) {
 
-    var serviceURL = document.URL;
-    var socket = io.connect(serviceURL);
-
     socket.emit('logEvent', {parametro:param, valorNuevo:valor, fecha:new Date(), trigger:"Usuario"});
 }
 /* ------------------------------------------------------------------------------
@@ -26,4 +23,17 @@ function updateEstado(event) {
 
     var span = document.getElementById(event.parametro);
     span.innerHTML = event.valorNuevo;
+}
+/* ------------------------------------------------------------------------------
+ * Se crea un nuevo item para listar en el post de alarmas
+**/
+function createAlarmMessage(msg) {
+
+    var f = new Date();
+    var fecha = f.getDay() + "/" + f.getMonth() + "/" + f.getFullYear() + "  " + f.getHours() + ":" + f.getMinutes();
+
+    var alarma =document.createElement('li');
+    alarma.innerHTML = msg + " " + fecha;
+
+    document.getElementById("alarmas").appendChild(alarma);
 }

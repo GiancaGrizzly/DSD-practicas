@@ -43,7 +43,7 @@
                 <button type="button" onclick="update('Temperatura', nuevaTemperatura.value)">Actualizar</button> <br><br>
 
                 <label for="nuevaLuminosidad"><b>Luminosidad</b></label>
-                -- 10 <input name="nuevaLuminosidad" id="nuevaLuminosidad" type="range" min="0" max="50"> 50
+                -- 10 <input name="nuevaLuminosidad" id="nuevaLuminosidad" type="range" min="10" max="50"> 50
                 <button type="button" onclick="update('Luminosidad', nuevaLuminosidad.value)">Actualizar</button> <br><br>
 
                 <label for="nuevoAire"><b>A/C</b></label>
@@ -93,9 +93,7 @@
 
         socket.on('alarma', function (msg) {
 
-            var ul_item = document.createElement('li');
-            ul_item.innerHTML = msg;
-            document.getElementById("alarmas").appendChild(ul_item);
+            createAlarmMessage(msg);
         });
 
     </script>

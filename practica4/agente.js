@@ -1,52 +1,41 @@
 /* ------------------------------------------------------------------------------
- * Umbrales
-**/
-const temperatura_MIN = 20;
-const temperatura_MAX = 35;
-const luminosidad_MIN = 15;
-const luminosidad_MAX = 45;
-/* ------------------------------------------------------------------------------
- * Funciones del agente para comprobar
+ * Funciones del agente para las comprobaciones
 **/
 function comprobar_umbrales(variable, sensores) {
 
-    console.log("Agente ...");
+    console.log("Agente comprobando ...");
 
     switch (variable) {
 
         case "Temperatura":
 
-            console.log("En el switch ...");
+            if (Number(sensores.Temperatura) < temperatura_MIN) {
 
-            if (sensores.Temperatura < temperatura_MIN) {
-
-                io.emit('alarma', "Temperatura por debajo del umbral.");
+                socket.emit('alarma', "Temperatura por debajo del umbral.");
             }
-            else if (sensores.Temperatura > temperatura_MAX) {
+            else if (Number(sensores.Temperatura) > temperatura_MAX) {
 
-                io.emit('alarma', "Temperatura por encima del umbral.");
+                socket.emit('alarma', "Temperatura por encima del umbral.");
             }
             break;
 
         case "Luminosidad":
 
-            console.log("En el switch ...");
+            if (Number(sensores.Luminosidad) < luminosidad_MIN) {
 
-            if (sensores.Luminosidad < luminosidad_MIN) {
-
-                io.emit('alarma', "Luminosidad por debajo del umbral.");
+                socket.emit('alarma', "Luminosidad por debajo del umbral.");
             }
-            else if (sensores.Luminosidad > luminosidad_MAX) {
+            else if (Number(sensores.Luminosidad) > luminosidad_MAX) {
 
-                io.emit('alarma', "Luminosidad por encima del umbral.");
+                socket.emit('alarma', "Luminosidad por encima del umbral.");
             }
             break;
     }
 
-    if (sensores.Temperatura > temperatura_MAX && sensores.Luminosidad > luminosidad_MAX) {
+    if (Number(sensores.Temperatura) > temperatura_MAX && Number(sensores.Luminosidad) > luminosidad_MAX) {
 
-        io.emit('alarma', "Temperatura y luminosidad por encima de sus umbrales -> Cerrando persiana ...")
-        io.emit('cerrar-persiana');
+        socket.emit('alarma', "Temperatura y luminosidad por encima de sus umbrales -> Cerrando persiana ...")
+        socket.emit('cerrar-persiana');
     }
 }
 
@@ -54,3 +43,56 @@ function comprobar_eventos_complejos(sensores) {
 
 
 }
+/* ------------------------------------------------------------------------------
+ * Umbrales
+**/
+const temperatura_MIN = 20;
+const temperatura_MAX = 35;
+const luminosidad_MIN = 15;
+const luminosidad_MAX = 45;
+/* ------------------------------------------------------------------------------
+ * El agente se conecta al servidor
+**/
+var io = require("socket.io-client");
+var socket = io("http://localhost:8080/");
+/* ------------------------------------------------------------------------------
+ * Se definen los eventos a los que el agente escucha
+**/
+socket.on('comprobar', function (data) {
+
+    switch (data.event.parametro) {
+
+        case "Temperatura":
+
+            data.sensores.Temperatura = data.event.valorNuevo;
+
+            comprobar_umbrales("Temperatura", data.sensores);
+            break;
+
+        case "Luminosidad":
+
+            data.sensores.Luminosidad = data.event.valorNuevo;
+
+            comprobar_umbrales("Luminosidad", data.sensores);
+            break;
+
+        case "Aire":
+
+            data.sensores.Aire = data.event.valorNuevo;
+
+            comprobar_eventos_complejos(data.sensores);
+            break;
+
+        case "Ventana":
+
+            data.sensores.Ventana = data.event.valorNuevo;
+
+            comprobar_eventos_complejos(data.sensores);
+            break;
+
+        default:
+            break;
+    }
+});
+
+console.log("Agente iniciado ...");

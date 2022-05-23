@@ -31,3 +31,13 @@ main {
 #actuadores {
     border-left: 5px solid black;
 }
+
+#alarmas {
+    border: 2px solid darkred;
+    height: 20vw;
+    overflow: scroll;
+}
+
+#alarmas li {
+    margin: 1vw;
+}
