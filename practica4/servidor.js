@@ -13,7 +13,13 @@ var urlMongo = "mongodb://localhost:27017/";
 var db_name = "domotica";
 var collection_name = "eventsLog";
 
-var sensores = {Temperatura:"25", Luminosidad:"30", Aire:"Apagado", Persiana:"Cerrada", Ventana:"Cerrada"};
+var sensores = {
+    Temperatura:"25",
+    Luminosidad:"30",
+    Aire:"Apagado",
+    Persiana:"Cerrada",
+    Ventana:"Cerrada"
+};
 
 var transporter = nodemailer.createTransport({
 
