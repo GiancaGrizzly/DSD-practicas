@@ -1,5 +1,6 @@
 /* ------------------------------------------------------------------------------
  * Carga el estado de los sensores
+ * Función que se realiza ante el evento 'load-estado'
 **/
 function loadEstado(sensores) {
 
@@ -11,6 +12,7 @@ function loadEstado(sensores) {
 /* ------------------------------------------------------------------------------
  * Prepara los campos del evento para insertarlo en la base de datos y emite el
  * evento para que el servidor proceda con el registro
+ * Función que se realiza al pulsar el botón de actualizar medida
 **/
 function update(param, valor) {
 
@@ -18,6 +20,7 @@ function update(param, valor) {
 }
 /* ------------------------------------------------------------------------------
  * Actualiza el valor mostrado en <span></span> correspondiente al evento <event>
+ * Función que se realiza ante el evento 'update-estado'
 **/
 function updateEstado(event) {
 
@@ -26,6 +29,7 @@ function updateEstado(event) {
 }
 /* ------------------------------------------------------------------------------
  * Crea un nuevo item para listar en el post de alarmas
+ * Función que se realiza ante el evento 'alarma'
 **/
 function createAlarmMessage(msg) {
 
